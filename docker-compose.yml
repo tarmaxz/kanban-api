@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .Dockerfile
+    image: kanban-api
+    container_name: kanban-api
+    volumes:
+      - .:/var/www
+    ports:
+      - "8080:8000"
+    depends_on:
+      - postgres
+    networks:
+      - app-network-kanban
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-api_kanban}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+    volumes:
+      - ./docker/postgres:/var/lib/postgresql/data
+    ports:
+      - "15432:5432"
+    restart: unless-stopped
+    networks:
+      - app-network-kanban
+
+networks:
+  app-network-kanban:
+    driver: bridge
