@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Repositories\BoardRepository;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\BoardRequest;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\BusinessException;
+
+class BoardController extends Controller {
+
+    protected BoardRepository $boardRepository;
+
+    public function __construct(
+        BoardRepository $boardRepository,
+    ) {
+        $this->boardRepository = $boardRepository;
+    }
+
+    public function index()
+    {
+        try {
+            $response = $this->boardRepository->all(request()->all());
+            return response()->json($response);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->responseError("Erro, não foi possível realizar a ação");
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $response = $this->boardRepository->find($id);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->responseError("Erro, não foi possível realizar a ação");
+        }
+    }
+
+    public function store(BoardRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $response = $this->boardRepository->create($request->all());
+            DB::commit();
+            return response()->json($response);
+        } catch (BusinessException $e) {
+            return $this->responseError($e->getMessage());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->responseError("Erro, não foi possível realizar a ação");
+        }
+    }
+
+    public function update($id, BoardRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $response = $this->boardRepository->update($id, $request->all());
+            DB::commit();
+            return response()->json($response);
+        } catch (BusinessException $e) {
+            return $this->responseError($e->getMessage());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->responseError("Erro, não foi possível realizar a ação");
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $response = $this->boardRepository->delete($id);
+            return response()->json($response);
+        } catch (BusinessException $e) {
+            return $this->responseError($e->getMessage());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->responseError("Erro, não foi possível realizar a ação");
+        }
+    }
+
+}
