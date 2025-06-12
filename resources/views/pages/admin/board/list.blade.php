@@ -21,21 +21,51 @@
             </thead>
             <tbody>
 
-              @foreach($list as $item)
-              <tr>
-                <td>{{ $item->id }}</td>
-                <td>{{ $item->name }}</td>
-                <td>
-                  <a href={{ route('admin.boards.form', ['id' => $item->id]) }} class="btn btn-sm btn-outline-primary">Editar</a>
-                  <a href="/categorias/1/excluir" class="btn btn-sm btn-outline-danger">Excluir</a>
-                </td>
-              </tr>
-              @endforeach
+            @foreach($list as $item)
+            <tr>
+            <td>{{ $item->id }}</td>
+            <td>{{ $item->name }}</td>
+            <td>
+                <a href={{ route('admin.boards.form', ['id' => $item->id]) }} class="btn btn-sm btn-outline-primary">Editar</a>
+                <button
+                  class="btn btn-sm btn-outline-danger btn-board-delete"
+                  data-id={{ $item->id }}
+                  data-name={{ $item->name }}
+                >
+                Excluir
+                </button>
+            </td>
+            </tr>
+            @endforeach
 
             </tbody>
           </table>
 
 
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="confirmDeleteModal"
+    tabindex="-1"
+    aria-labelledby="confirmDeleteModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Confirmar Exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          Tem certeza que deseja excluir o board <strong id="boardName"></strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-board-delete-confirm" class="btn btn-danger">Sim, excluir</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </div>
     </div>

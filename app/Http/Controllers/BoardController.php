@@ -46,10 +46,6 @@ class BoardController extends Controller {
             $details = $this->boardRepository->find($id);
         }
 
-
-        Log::info('gggg');
-        Log::info($details);
-
 		$viewVars = [
 			'baseSite' => url('/'),
             'details' => $details

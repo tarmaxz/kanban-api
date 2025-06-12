@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\BoardRepository;
 use App\Repositories\BoardCategoryRepository;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\BoardCategoryRequest;
@@ -12,17 +13,22 @@ use App\Exceptions\BusinessException;
 class BoardCategoryController extends Controller {
 
     protected BoardCategoryRepository $boardCategoryRepository;
+    protected BoardRepository $boardRepository;
 
     public function __construct(
         BoardCategoryRepository $boardCategoryRepository,
+        BoardRepository $boardRepository,
     ) {
+        $this->boardRepository = $boardRepository;
         $this->boardCategoryRepository = $boardCategoryRepository;
     }
 
     public function listView()
 	{
+        $list = $this->boardCategoryRepository->all(request()->all());
 		$viewVars = [
-			'baseSite' => url('/')
+			'baseSite' => url('/'),
+            'list' => $list
 		];
 
 		return view('pages.admin.board-category.list', $viewVars);
@@ -30,8 +36,16 @@ class BoardCategoryController extends Controller {
 
     public function formView()
 	{
+        $details = null;
+        $list = $this->boardRepository->all(request()->all());
+        if (!empty($id)) {
+            $details = $this->boardCategoryRepository->find($id);
+        }
+
 		$viewVars = [
-			'baseSite' => url('/')
+			'baseSite' => url('/'),
+            'list' => $list,
+            'details' => $details
 		];
 
 		return view('pages.admin.board-category.form', $viewVars);
