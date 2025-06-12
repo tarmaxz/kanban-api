@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Board extends Model
 {
     use SoftDeletes;
-    
+
     protected $fillable = [
         'id',
         'name',

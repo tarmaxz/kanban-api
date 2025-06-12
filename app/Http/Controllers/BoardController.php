@@ -19,6 +19,45 @@ class BoardController extends Controller {
         $this->boardRepository = $boardRepository;
     }
 
+    public function indexView()
+	{
+		$viewVars = [
+			'baseSite' => url('/')
+		];
+
+        return view('pages.kanban', $viewVars);
+	}
+
+    public function listView()
+	{
+        $list = $this->boardRepository->all(request()->all());
+		$viewVars = [
+			'baseSite' => url('/'),
+            'list' => $list
+		];
+
+		return view('pages.admin.board.list', $viewVars);
+	}
+
+    public function formView($id = null)
+	{
+        $details = null;
+        if (!empty($id)) {
+            $details = $this->boardRepository->find($id);
+        }
+
+
+        Log::info('gggg');
+        Log::info($details);
+
+		$viewVars = [
+			'baseSite' => url('/'),
+            'details' => $details
+		];
+
+		return view('pages.admin.board.form', $viewVars);
+	}
+
     public function index()
     {
         try {
