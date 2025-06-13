@@ -14,9 +14,9 @@ class BoardRepository extends AbstractRepository {
 
     public function all()
     {
-        $query = $this->model::query();
-
-        return $query->orderBy('id', 'DESC')->get();
+        return $this->model::with(['board_categories.board_cards'])
+            ->orderBy('position', 'asc')
+            ->get();
     }
 
     public function create(array $data)

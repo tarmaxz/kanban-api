@@ -23,6 +23,7 @@ class BoardCategoryRequest extends FormRequest
     {
         $rules = [
             'name' => 'required',
+            'board_id' => 'required',
         ];
 
         return $rules;
@@ -36,7 +37,8 @@ class BoardCategoryRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'O nome da categoria é obrigatória.'
+            'name.required' => 'O nome da categoria é obrigatório',
+            'board_id.required' => 'Selecione um board, é obrigatório'
         ];
     }
 }

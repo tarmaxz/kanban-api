@@ -5,11 +5,17 @@ $(document).ready(function () {
       const nome = $('input[name="nome"]').val();
       const method = $('input[name="method"]').val();
       const id = $('input[name="id"]').val();
+      const position = $('input[name="position"]').val();
+
+      const data = {
+        name: nome,
+        position: position
+      }
 
       $.ajax({
         url: '/api/boards/' + id,
         type: method,
-        data: JSON.stringify({ name: nome }),
+        data: JSON.stringify(data),
         contentType: 'application/json',
         headers: {
           'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -41,14 +47,14 @@ $(document).ready(function () {
         if (!selectedBoardId) return;
 
         $.ajax({
-            url: `/api/boards/${selectedBoardId}`, // ajuste conforme a rota da sua API
+            url: `/api/boards/${selectedBoardId}`,
             type: 'DELETE',
             headers: {
-            'Authorization': 'Bearer {{ session("token") }}', // se necessário
+            'Authorization': 'Bearer {{ session("token") }}',
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             success: function (response) {
-            location.reload(); // recarrega a página após excluir
+            location.reload();
             },
             error: function (xhr) {
             alert('Erro ao excluir: ' + xhr.responseText);

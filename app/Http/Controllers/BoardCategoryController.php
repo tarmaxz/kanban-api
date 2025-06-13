@@ -34,7 +34,7 @@ class BoardCategoryController extends Controller {
 		return view('pages.admin.board-category.list', $viewVars);
 	}
 
-    public function formView()
+    public function formView($id = null)
 	{
         $details = null;
         $list = $this->boardRepository->all(request()->all());

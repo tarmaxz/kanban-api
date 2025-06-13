@@ -16,6 +16,8 @@
               <tr>
                 <th>#</th>
                 <th>Nome</th>
+                <th>Posição</th>
+                <th>Board</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -25,10 +27,12 @@
             <tr>
             <td>{{ $item->id }}</td>
             <td>{{ $item->name }}</td>
+            <td>{{ $item->position }}</td>
+            <td>{{ $item?->board?->name }}</td>
             <td>
                 <a href={{ route('admin.board-categories.form', ['id' => $item->id]) }} class="btn btn-sm btn-outline-primary">Editar</a>
                 <button
-                  class="btn btn-sm btn-outline-danger btn-board-delete"
+                  class="btn btn-sm btn-outline-danger btn-board-category-delete"
                   data-id={{ $item->id }}
                   data-name={{ $item->name }}
                 >
@@ -49,9 +53,9 @@
 
   <div
     class="modal fade"
-    id="confirmDeleteModal"
+    id="confirmDeleteCategoryModal"
     tabindex="-1"
-    aria-labelledby="confirmDeleteModalLabel"
+    aria-labelledby="confirmDeletCategoryModalLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered">
@@ -64,7 +68,7 @@
           Tem certeza que deseja excluir a categoria <strong id="boardName"></strong>?
         </div>
         <div class="modal-footer">
-          <button type="button" id="btn-board-delete-confirm" class="btn btn-danger">Sim, excluir</button>
+          <button type="button" id="btn-board-category-delete-confirm" class="btn btn-danger">Sim, excluir</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </div>

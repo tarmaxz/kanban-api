@@ -11,6 +11,12 @@ class Board extends Model
 
     protected $fillable = [
         'id',
+        'position',
         'name',
     ];
+
+    public function board_categories()
+    {
+        return $this->hasMany(BoardCategory::class);
+    }
 }

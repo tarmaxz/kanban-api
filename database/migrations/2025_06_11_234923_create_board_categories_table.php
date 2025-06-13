@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('board_id')->nullable();
             $table->string('name', 150);
+            $table->integer('position')->default(0);
             $table->timestamp('created_at')->useCurrent()->comment('The created_at timestamp registered');
             $table->timestamp('updated_at')->useCurrentOnUpdate()->comment('The updated_at timestamp registered')->nullable()->default(null);
             $table->softDeletes();

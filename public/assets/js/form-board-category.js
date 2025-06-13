@@ -1,15 +1,23 @@
 $(document).ready(function () {
-    $('#form-board').on('submit', function (e) {
+    $('#form-board-category').on('submit', function (e) {
       e.preventDefault();
 
       const nome = $('input[name="nome"]').val();
       const method = $('input[name="method"]').val();
       const id = $('input[name="id"]').val();
+      const boardId = $('select[name="board_id"]').val();
+      const position = $('input[name="position"]').val();
+
+      const data = {
+        name: nome,
+        board_id: boardId,
+        position: position
+      }
 
       $.ajax({
-        url: '/api/boards/' + id,
+        url: '/api/board-categories/' + id,
         type: method,
-        data: JSON.stringify({ name: nome }),
+        data: JSON.stringify(data),
         contentType: 'application/json',
         headers: {
           'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -28,27 +36,27 @@ $(document).ready(function () {
       });
     });
 
-    $('.btn-board-delete').on('click', function () {
+    $('.btn-board-category-delete').on('click', function () {
         selectedBoardId = $(this).data('id');
         const boardName = $(this).data('name');
 
         $('#boardName').text(boardName);
-        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        const modal = new bootstrap.Modal(document.getElementById('confirmDeleteCategoryModal'));
         modal.show();
     });
 
-    $('#btn-board-delete-confirm').on('click', function () {
+    $('#btn-board-category-delete-confirm').on('click', function () {
         if (!selectedBoardId) return;
 
         $.ajax({
-            url: `/api/boards/${selectedBoardId}`, // ajuste conforme a rota da sua API
+            url: `/api/board-categories/${selectedBoardId}`,
             type: 'DELETE',
             headers: {
-            'Authorization': 'Bearer {{ session("token") }}', // se necessário
+            'Authorization': 'Bearer {{ session("token") }}',
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             success: function (response) {
-            location.reload(); // recarrega a página após excluir
+            location.reload();
             },
             error: function (xhr) {
             alert('Erro ao excluir: ' + xhr.responseText);

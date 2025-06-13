@@ -16,6 +16,7 @@
               <tr>
                 <th>#</th>
                 <th>Nome</th>
+                <th>Posição</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -25,6 +26,7 @@
             <tr>
             <td>{{ $item->id }}</td>
             <td>{{ $item->name }}</td>
+            <td>{{ $item->position }}</td>
             <td>
                 <a href={{ route('admin.boards.form', ['id' => $item->id]) }} class="btn btn-sm btn-outline-primary">Editar</a>
                 <button

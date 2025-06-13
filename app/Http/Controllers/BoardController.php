@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\BoardRepository;
+use App\Repositories\BoardCardRepository;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\BoardRequest;
 use Illuminate\Support\Facades\DB;
@@ -12,17 +13,22 @@ use App\Exceptions\BusinessException;
 class BoardController extends Controller {
 
     protected BoardRepository $boardRepository;
+    protected BoardCardRepository $boardCardRepository;
 
     public function __construct(
         BoardRepository $boardRepository,
+        BoardCardRepository $boardCardRepository,
     ) {
         $this->boardRepository = $boardRepository;
+        $this->boardCardRepository = $boardCardRepository;
     }
 
     public function indexView()
 	{
+        $list = $this->boardRepository->all(request()->all());
 		$viewVars = [
-			'baseSite' => url('/')
+			'baseSite' => url('/'),
+            'list' => $list
 		];
 
         return view('pages.kanban', $viewVars);
