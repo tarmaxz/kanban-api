@@ -4,8 +4,9 @@
 <div class="container-fluid py-4">
     <h2 class="text-center mb-5">Kanban</h2>
     <div class="d-flex justify-content-center mb-5 gap-2">
-        <a href={{ route('admin.boards.index') }} class="btn btn-primary">Criar Board</a>
-        <a href={{ route('admin.board-categories.index') }} class="btn btn-outline-secondary">Criar Categorias</a>
+        <a href={{ route('admin.boards.index') }} class="btn btn-primary btn-navigation-board">Criar Board</a>
+        <a href={{ route('admin.board-categories.index') }} class="btn btn-outline-secondary btn-navigation-board">Criar Categorias</a>
+        <a href='#' class="btn btn-outline-secondary btn-board-logout">Sair</a>
     </div>
 
     <div class="modal fade" id="cardModal" tabindex="-1" aria-labelledby="cardModalLabel" aria-hidden="true">
@@ -17,6 +18,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
+                <div id="mensagem" class="mt-3"></div>
                 <input type="hidden" name="card_id" id="cardId">
                 <input type="hidden" name="category_id" id="categoryId">
                 <input type="hidden" name="position" id="position">
@@ -41,6 +43,7 @@
             </form>
         </div>
         </div>
+
     </div>
 
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -51,6 +54,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
         <div class="modal-body">
+            <div id="mensagem" class="mt-3"></div>
             Tem certeza de que deseja excluir este card?
         </div>
         <div class="modal-footer">
@@ -62,6 +66,8 @@
     </div>
 
     @section('scripts')
+        <script src="{{ asset('assets/js/verify.js') }}"></script>
         <script src="{{ asset('assets/js/kanban.js') }}"></script>
+        <script src="{{ asset('assets/js/logout.js') }}"></script>
     @endsection
 @endsection

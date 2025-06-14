@@ -2,7 +2,7 @@ $(document).ready(function () {
     const token = localStorage.getItem('access_token');
 
     $.ajax({
-      url: '/api/boards',
+      url: '/api/boards/all-kanban',
       type: 'GET',
       headers: {
         'Authorization': 'Bearer ' + token
@@ -12,7 +12,6 @@ $(document).ready(function () {
       },
       error: function (err) {
         console.error('Erro ao buscar boards', err);
-        alert("Erro ao carregar boards. Verifique o token.");
       }
     });
 
@@ -125,7 +124,7 @@ $(document).ready(function () {
                 location.reload();
             },
             error: function () {
-                alert('Erro ao salvar o card.');
+                console.log('Erro ao salvar o card.');
             }
         });
     });
@@ -133,43 +132,40 @@ $(document).ready(function () {
     let cardIdToDelete = null;
 
     $(document).on('click', '.btn-delete-card', function () {
-        //$('.btn-delete-card').on('click', function () {
         cardIdToDelete = $(this).data('card-id');
         const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
         modal.show();
     });
 
     $(document).on('click', '#confirmDeleteBtn', function () {
-    //$('#confirmDeleteBtn').on('click', function () {
-    if (cardIdToDelete) {
-        const token = localStorage.getItem('access_token');
+        if (cardIdToDelete) {
+            const token = localStorage.getItem('access_token');
 
-        $.ajax({
-        url: `/api/board-cards/${cardIdToDelete}`,
-        type: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            'Authorization': `Bearer ${token}`
-        },
-        success: function () {
-            $('#confirmDeleteModal').modal('hide');
-            $('[data-card-id="' + cardIdToDelete + '"]').remove();
-            cardIdToDelete = null;
-        },
-        error: function () {
-            alert('Erro ao excluir o card.');
+            $.ajax({
+            url: `/api/board-cards/${cardIdToDelete}`,
+            type: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Authorization': `Bearer ${token}`
+            },
+            success: function () {
+                $('#confirmDeleteModal').modal('hide');
+                $('[data-card-id="' + cardIdToDelete + '"]').remove();
+                cardIdToDelete = null;
+            },
+            error: function () {
+                console.log('Erro ao excluir o card.');
+            }
+            });
         }
-        });
-    }
     });
+
 
     let currentCardId = null;
     let currentCategoryId = null;
     let currentBoardId = null;
 
-
     $(document).on('click', '#nextCard', function () {
-        //$('#nextCard').on('click', function() {
         currentBoardId = $('#boardId').val();
         currentCardId = $('#cardId').val();
         currentCategoryId = $('#categoryId').val();
@@ -192,12 +188,16 @@ $(document).ready(function () {
             },
             data: data,
             success: function(response) {
-                preencherModal(response.card);
-                location.reload();
+                window.location.href = '/kanban';
             },
-            error: function() {
-                alert('Erro ao buscar próximo card.');
-            }
+            error: function (err) {
+                const error = err.responseJSON?.errors?.[0];
+                if (error) {
+                    $('#mensagem').html('<div class="alert alert-danger">'+ error +'</div>');
+                } else {
+                    $('#mensagem').html('<div class="alert alert-danger">Erro ao salvar, por favor contate o suporte.</div>');
+                }
+              }
         });
     });
 
@@ -224,12 +224,16 @@ $(document).ready(function () {
             },
             data: data,
             success: function(response) {
-                preencherModal(response.card);
-                location.reload();
+                window.location.href = '/kanban';
             },
-            error: function() {
-                alert('Erro ao buscar card anterior.');
-            }
+            error: function (err) {
+                const error = err.responseJSON?.errors?.[0];
+                if (error) {
+                    $('#mensagem').html('<div class="alert alert-danger">'+ error +'</div>');
+                } else {
+                    $('#mensagem').html('<div class="alert alert-danger">Erro ao salvar, por favor contate o suporte.</div>');
+                }
+              }
         });
     });
 });

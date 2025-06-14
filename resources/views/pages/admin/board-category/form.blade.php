@@ -45,6 +45,7 @@
     </div>
   </div>
   @section('scripts')
+  <script src="{{ asset('assets/js/verify.js') }}"></script>
   <script src="{{ asset('assets/js/form-board-category.js') }}"></script>
 @endsection
   @endsection

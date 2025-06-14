@@ -25,7 +25,6 @@ class BoardCategoryController extends Controller {
 
     public function listView()
 	{
-        //$list = $this->boardCategoryRepository->all(request()->all());
 		$viewVars = [
 			'baseSite' => url('/'),
             'list' => []
@@ -37,10 +36,6 @@ class BoardCategoryController extends Controller {
     public function formView($id = null)
 	{
         $details = null;
-        //$list = $this->boardRepository->all(request()->all());
-        /*if (!empty($id)) {
-            $details = $this->boardCategoryRepository->find($id);
-        }*/
 
 		$viewVars = [
 			'baseSite' => url('/'),
@@ -53,11 +48,18 @@ class BoardCategoryController extends Controller {
 
     public function index()
     {
+        DB::beginTransaction();
         try {
             $response = $this->boardCategoryRepository->all(request()->all());
+            DB::commit();
             return response()->json($response);
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
+            return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -67,8 +69,13 @@ class BoardCategoryController extends Controller {
         try {
             $response = $this->boardCategoryRepository->find($id);
             return response()->json($response);
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
+            return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -81,9 +88,12 @@ class BoardCategoryController extends Controller {
             DB::commit();
             return response()->json($response);
         } catch (BusinessException $e) {
+            Log::error($e);
+            DB::rollback();
             return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -95,10 +105,13 @@ class BoardCategoryController extends Controller {
             $response = $this->boardCategoryRepository->update($id, $request->all());
             DB::commit();
             return response()->json($response);
-        } catch (BusinessException $e) {
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
             return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -108,10 +121,13 @@ class BoardCategoryController extends Controller {
         try {
             $response = $this->boardCategoryRepository->delete($id);
             return response()->json($response);
-        } catch (BusinessException $e) {
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
             return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }

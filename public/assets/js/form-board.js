@@ -59,7 +59,18 @@ $(document).ready(function () {
         renderBoards(data);
       },
       error: function (err) {
-        console.error('Erro ao buscar boards', err);
+        let errorMessage = 'Erro ao buscar boards.';
+
+        if (err.responseJSON?.errors?.[0]) {
+          errorMessage = err.responseJSON.errors[0];
+          console.error(errorMessage);
+        }
+
+        $('#mensagem').html(`
+          <div class="alert alert-danger" role="alert">
+            ${errorMessage}
+          </div>
+        `);
       }
     });
 
@@ -88,8 +99,8 @@ $(document).ready(function () {
         success: function (response) {
           $('#mensagem').html('<div class="alert alert-success">Salvo com sucesso!</div>');
         },
-        error: function (xhr) {
-          const error = xhr?.responseJSON?.message;
+        error: function (err) {
+          const error = err.responseJSON?.errors?.[0];
           if (error) {
               $('#mensagem').html('<div class="alert alert-danger">'+ error +'</div>');
           } else {

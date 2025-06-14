@@ -2,6 +2,7 @@
 
 @section('content')
   <div class="container py-5">
+    <div id="mensagem" class="mt-3"></div>
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2>Categorias Cadastradas</h2>
       <a href={{ route('admin.board-categories.form') }} class="btn btn-success">+ Nova</a>
@@ -80,6 +81,7 @@
   </div>
 
   @section('scripts')
+  <script src="{{ asset('assets/js/verify.js') }}"></script>
   <script src="{{ asset('assets/js/form-board-category.js') }}"></script>
 @endsection
 

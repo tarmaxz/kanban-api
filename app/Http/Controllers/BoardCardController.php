@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\BoardRepository;
 use App\Repositories\BoardCardRepository;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\BoardCardRequest;
@@ -20,17 +19,6 @@ class BoardCardController extends Controller {
     ) {
         $this->boardCardRepository = $boardCardRepository;
     }
-
-    /*public function listView()
-	{
-        $list = $this->boardCardRepository->all(request()->all());
-		$viewVars = [
-			'baseSite' => url('/'),
-            'list' => $list
-		];
-
-		return view('pages.admin.board-category.list', $viewVars);
-	}*/
 
     public function index()
     {
@@ -111,24 +99,4 @@ class BoardCardController extends Controller {
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
-
-    /*public function formView($id = null)
-	{
-        $details = null;
-        $list = $this->boardRepository->all(request()->all());
-        if (!empty($id)) {
-            $details = $this->boardCategoryRepository->find($id);
-        }
-
-		$viewVars = [
-			'baseSite' => url('/'),
-            'list' => $list,
-            'details' => $details
-		];
-
-		return view('pages.admin.board-category.form', $viewVars);
-	}
-
-    */
-
 }

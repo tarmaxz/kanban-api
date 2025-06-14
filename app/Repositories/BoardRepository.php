@@ -4,16 +4,19 @@ namespace App\Repositories;
 
 use App\Models\Board;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
-use App\Exceptions\BusinessException;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use App\Services\PermissionService;
 
 class BoardRepository extends AbstractRepository {
 
     protected $model = Board::class;
+    protected $permissionService;
 
-    public function all()
+    public function __construct(PermissionService $permissionService)
+    {
+        $this->permissionService = $permissionService;
+    }
+
+    public function allKanban()
     {
         $user = Auth::user();
 
@@ -26,18 +29,31 @@ class BoardRepository extends AbstractRepository {
         ->get();
     }
 
+    public function all()
+    {
+        $this->permissionService->verify();
+
+        return $this->model::orderBy('position', 'asc')->get();
+    }
+
     public function create(array $data)
     {
+        $this->permissionService->verify();
+
         return $this->model::create($data);
     }
 
     public function find($id)
     {
+        $this->permissionService->verify();
+
         return $this->model::find($id);
     }
 
     public function update($id, array $data)
     {
+        $this->permissionService->verify();
+
         $response = $this->find($id);
         $response->update($data);
 
@@ -46,6 +62,8 @@ class BoardRepository extends AbstractRepository {
 
     public function delete($id)
     {
+        $this->permissionService->verify();
+
         $response = $this->find($id);
         $response->delete();
         return $response;

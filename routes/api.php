@@ -35,9 +35,30 @@ Route::post('/login', function (Request $request) {
     ]);
 });
 
+Route::middleware('auth:api')->get('/verify', function () {
+    if (Auth::check()) {
+        $user = Auth::user();
+
+        return response()->json([
+            "user" => $user,
+            "verify" => true
+        ], 200);
+    } else {
+        return response()->json(["verify" => false], 401);
+    }
+});
+
+Route::middleware('auth:api')->post('/logout', function (Request $request) {
+    $token = $request->user()->token();
+    $token->revoke();
+    $response = ['message' => 'Logout realizado com sucesso.'];
+
+    return response($response, 200);
+});
+
 Route::middleware('auth:api')->prefix('boards')->group(function () {
-//Route::prefix('boards')->group(function() {
     Route::get('/', [BoardController::class, 'index']);
+    Route::get('/all-kanban', [BoardController::class, 'indexKanban']);
     Route::get('/{id}', [BoardController::class, 'show']);
     Route::post('/', [BoardController::class, 'store']);
     Route::delete('/{id}', [BoardController::class, 'delete']);
@@ -59,9 +80,4 @@ Route::middleware('auth:api')->prefix('board-cards')->group(function() {
     Route::delete('/{id}', [BoardCardController::class, 'delete']);
     Route::put('/{id}', [BoardCardController::class, 'update']);
     Route::put('/{id}/move', [BoardCardController::class, 'updateMove']);
-});
-
-
-Route::middleware('api')->get('/test', function (Request $request) {
-    return response()->json(['message' => 'API funcionando!']);
 });

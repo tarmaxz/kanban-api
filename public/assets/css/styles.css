@@ -17,10 +17,10 @@ padding-bottom: 1rem;
 }
 
 .kanban-column {
-display: inline-block;
-vertical-align: top;
-width: 300px;
-margin-right: 1rem;
+    display: inline-block;
+    vertical-align: top;
+    width: 300px;
+    margin-right: 1rem;
 }
 
 .kanban-card {

@@ -8,21 +8,20 @@ $(document).ready(function () {
             url: '/api/boards',
             type: 'GET',
             headers: {
-            'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + token
             },
             success: function (data) {
-            const select = $('select[name="board_id"]');
-            select.empty();
-            select.append('<option value="">Selecione</option>');
+                const select = $('select[name="board_id"]');
+                select.empty();
+                select.append('<option value="">Selecione</option>');
 
-            data.forEach(board => {
-                const selected = boardSelecionado == board.id ? 'selected' : '';
-                select.append(`<option value="${board.id}" ${selected}>${board.name}</option>`);
-            });
+                data.forEach(board => {
+                    const selected = boardSelecionado == board.id ? 'selected' : '';
+                    select.append(`<option value="${board.id}" ${selected}>${board.name}</option>`);
+                });
             },
             error: function (err) {
-            console.error('Erro ao carregar boards', err);
-            alert('Erro ao carregar opções de board.');
+                console.error('Erro ao carregar selects', err);
             }
         });
     }
@@ -41,15 +40,13 @@ $(document).ready(function () {
             $('input[name="nome"]').val(data.name);
             $('input[name="position"]').val(data.position);
 
-
             loadingBoardsSelect(data.board_id);
 
             $('input[name="method"]').val('PUT');
             $('.btn-primary').text('Editar');
           },
           error: function (err) {
-            console.error('Erro ao buscar board', err);
-            alert("Erro ao carregar dados do board.");
+            console.error('Erro ao buscar categorias', err);
           }
         });
     }
@@ -89,7 +86,18 @@ $(document).ready(function () {
         renderBoards(data);
       },
       error: function (err) {
-        console.error('Erro ao buscar categorias', err);
+        let errorMessage = 'Erro ao buscar categorias.';
+
+        if (err.responseJSON?.errors?.[0]) {
+          errorMessage = err.responseJSON.errors[0];
+          console.error(errorMessage);
+        }
+
+        $('#mensagem').html(`
+          <div class="alert alert-danger" role="alert">
+            ${errorMessage}
+          </div>
+        `);
       }
     });
 
@@ -121,14 +129,14 @@ $(document).ready(function () {
         success: function (response) {
           $('#mensagem').html('<div class="alert alert-success">Salvo com sucesso!</div>');
         },
-        error: function (xhr) {
-          const error = xhr?.responseJSON?.message;
-          if (error) {
-              $('#mensagem').html('<div class="alert alert-danger">'+ error +'</div>');
-          } else {
-              $('#mensagem').html('<div class="alert alert-danger">Erro ao salvar, por favor contate o suporte.</div>');
+        error: function (err) {
+            const error = err.responseJSON?.errors?.[0];
+            if (error) {
+                $('#mensagem').html('<div class="alert alert-danger">'+ error +'</div>');
+            } else {
+                $('#mensagem').html('<div class="alert alert-danger">Erro ao salvar, por favor contate o suporte.</div>');
+            }
           }
-        }
       });
     });
 
@@ -154,8 +162,8 @@ $(document).ready(function () {
             success: function (response) {
                 location.reload();
             },
-            error: function (xhr) {
-                alert('Erro ao excluir: ' + xhr.responseText);
+            error: function (err) {
+                alert('Erro ao excluir: ' + err.responseText);
             }
         });
     });

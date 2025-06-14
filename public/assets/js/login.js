@@ -19,10 +19,10 @@ $(document).ready(function () {
           localStorage.setItem('access_token', response.access_token);
           window.location.href = '/kanban';
         },
-        error: function (xhr) {
+        error: function (err) {
           let errorMsg = 'Erro ao fazer login.';
-          if (xhr.responseJSON && xhr.responseJSON.message) {
-            errorMsg = xhr.responseJSON.message;
+          if (err.responseJSON && err.responseJSON.message) {
+            errorMsg = err.responseJSON.message;
           }
           $('#loginError').text(errorMsg).show();
         }

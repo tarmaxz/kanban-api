@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\BoardRequest;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\BusinessException;
-use Illuminate\Support\Facades\Auth;
 
 class BoardController extends Controller {
 
@@ -26,10 +25,6 @@ class BoardController extends Controller {
 
     public function indexView()
 	{
-        //$user = Auth::user();
-        //\Log::info("CCCC");
-        //\Log::info($user);
-        //$list = $this->boardRepository->all(request()->all());
 		$viewVars = [
 			'baseSite' => url('/'),
             'list' => []
@@ -40,7 +35,6 @@ class BoardController extends Controller {
 
     public function listView()
 	{
-        //$list = $this->boardRepository->all(request()->all());
 		$viewVars = [
 			'baseSite' => url('/'),
             'list' => []
@@ -49,28 +43,41 @@ class BoardController extends Controller {
 		return view('pages.admin.board.list', $viewVars);
 	}
 
-    public function formView($id = null)
+    public function formView()
 	{
-        $details = null;
-        /*if (!empty($id)) {
-            $details = $this->boardRepository->find($id);
-        }*/
-
 		$viewVars = [
 			'baseSite' => url('/'),
-            'details' => $details
+            'details' => null
 		];
 
 		return view('pages.admin.board.form', $viewVars);
 	}
 
-    public function index()
+    public function indexKanban()
     {
         try {
-            $response = $this->boardRepository->all(request()->all());
+            $response = $this->boardRepository->allKanban(request()->all());
             return response()->json($response);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            return $this->responseError("Erro, não foi possível realizar a ação");
+        }
+    }
+
+    public function index()
+    {
+        DB::beginTransaction();
+        try {
+            $response = $this->boardRepository->all(request()->all());
+            DB::commit();
+            return response()->json($response);
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
+            return $this->responseError($e->getMessage());
+        } catch (\Exception $e) {
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -80,8 +87,13 @@ class BoardController extends Controller {
         try {
             $response = $this->boardRepository->find($id);
             return response()->json($response);
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
+            return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -93,10 +105,13 @@ class BoardController extends Controller {
             $response = $this->boardRepository->create($request->all());
             DB::commit();
             return response()->json($response);
-        } catch (BusinessException $e) {
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
             return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -108,10 +123,13 @@ class BoardController extends Controller {
             $response = $this->boardRepository->update($id, $request->all());
             DB::commit();
             return response()->json($response);
-        } catch (BusinessException $e) {
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
             return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
@@ -121,12 +139,14 @@ class BoardController extends Controller {
         try {
             $response = $this->boardRepository->delete($id);
             return response()->json($response);
-        } catch (BusinessException $e) {
+        } catch (BusinessException $e){
+            Log::error($e);
+            DB::rollback();
             return $this->responseError($e->getMessage());
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
+            Log::error($e);
+            DB::rollback();
             return $this->responseError("Erro, não foi possível realizar a ação");
         }
     }
-
 }

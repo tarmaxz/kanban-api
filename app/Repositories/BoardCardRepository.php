@@ -5,10 +5,7 @@ namespace App\Repositories;
 use App\Models\BoardCard;
 use App\Models\BoardCategory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\BusinessException;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class BoardCardRepository extends AbstractRepository {
 
@@ -17,6 +14,7 @@ class BoardCardRepository extends AbstractRepository {
     public function all()
     {
         $user = Auth::user();
+
         return $this->model::visibleByUser($user)->orderBy('position', 'asc')->get();
     }
 
@@ -54,6 +52,8 @@ class BoardCardRepository extends AbstractRepository {
 
             if (!empty($nextBoardCategory->id)) {
                 $newData['board_category_id'] = $nextBoardCategory->id;
+            } else {
+                throw new BusinessException('Não é possível avançar mais!');
             }
         }
 
@@ -66,11 +66,12 @@ class BoardCardRepository extends AbstractRepository {
 
             if ($previousBoardCategory) {
                 $newData['board_category_id'] = $previousBoardCategory->id;
+            } else {
+                throw new BusinessException('Não é possível retroceder mais!');
             }
         }
 
         if (!empty($newData)) {
-            \Log::info($newData);
             $response->update($newData);
         }
 
