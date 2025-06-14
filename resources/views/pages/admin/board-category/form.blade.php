@@ -17,7 +17,7 @@
                 <input type="text" class="form-control" name="nome" value="{{ $details?->name ?? '' }}">
               </div>
               <div class="mb-3">
-                <label for="tipo" class="form-label">Tipo</label>
+                <label for="tipo" class="form-label">Board</label>
                 <select class="form-select" name="board_id">
                   <option value="">Selecione</option>
                   @foreach($list as $item)
@@ -44,5 +44,7 @@
       </div>
     </div>
   </div>
-
+  @section('scripts')
+  <script src="{{ asset('assets/js/form-board-category.js') }}"></script>
+@endsection
   @endsection

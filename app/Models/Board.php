@@ -4,19 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Scopes\BoardCardScopes;
 
 class Board extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, BoardCardScopes;
 
     protected $fillable = [
         'id',
-        'position',
         'name',
+        'position'
     ];
 
     public function board_categories()
     {
-        return $this->hasMany(BoardCategory::class);
+        return $this->hasMany(BoardCategory::class)->orderBy('position', 'asc');
     }
 }

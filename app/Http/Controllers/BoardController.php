@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\BoardRequest;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\BusinessException;
+use Illuminate\Support\Facades\Auth;
 
 class BoardController extends Controller {
 
@@ -25,10 +26,13 @@ class BoardController extends Controller {
 
     public function indexView()
 	{
-        $list = $this->boardRepository->all(request()->all());
+        //$user = Auth::user();
+        //\Log::info("CCCC");
+        //\Log::info($user);
+        //$list = $this->boardRepository->all(request()->all());
 		$viewVars = [
 			'baseSite' => url('/'),
-            'list' => $list
+            'list' => []
 		];
 
         return view('pages.kanban', $viewVars);
@@ -36,10 +40,10 @@ class BoardController extends Controller {
 
     public function listView()
 	{
-        $list = $this->boardRepository->all(request()->all());
+        //$list = $this->boardRepository->all(request()->all());
 		$viewVars = [
 			'baseSite' => url('/'),
-            'list' => $list
+            'list' => []
 		];
 
 		return view('pages.admin.board.list', $viewVars);
@@ -48,9 +52,9 @@ class BoardController extends Controller {
     public function formView($id = null)
 	{
         $details = null;
-        if (!empty($id)) {
+        /*if (!empty($id)) {
             $details = $this->boardRepository->find($id);
-        }
+        }*/
 
 		$viewVars = [
 			'baseSite' => url('/'),

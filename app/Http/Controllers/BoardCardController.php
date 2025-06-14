@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\BoardCardRequest;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\BusinessException;
+use Illuminate\Http\Request;
 
 class BoardCardController extends Controller {
 
@@ -73,6 +74,21 @@ class BoardCardController extends Controller {
         DB::beginTransaction();
         try {
             $response = $this->boardCardRepository->update($id, $request->all());
+            DB::commit();
+            return response()->json($response);
+        } catch (BusinessException $e) {
+            return $this->responseError($e->getMessage());
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return $this->responseError("Erro, não foi possível realizar a ação");
+        }
+    }
+
+    public function updateMove($id, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $response = $this->boardCardRepository->updateMove($id, $request->all());
             DB::commit();
             return response()->json($response);
         } catch (BusinessException $e) {

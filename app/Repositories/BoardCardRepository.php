@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\BoardCard;
+use App\Models\BoardCategory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use App\Exceptions\BusinessException;
 use Illuminate\Support\Facades\Cache;
@@ -14,11 +16,15 @@ class BoardCardRepository extends AbstractRepository {
 
     public function all()
     {
-        return $this->model::orderBy('position', 'asc')->get();
+        $user = Auth::user();
+        return $this->model::visibleByUser($user)->orderBy('position', 'asc')->get();
     }
 
     public function create(array $data)
     {
+        $user = Auth::user();
+        $data['user_id'] = $user->id;
+
         return $this->model::create($data);
     }
 
@@ -31,6 +37,42 @@ class BoardCardRepository extends AbstractRepository {
     {
         $response = $this->find($id);
         $response->update($data);
+
+        return $response;
+    }
+
+    public function updateMove($id, array $data)
+    {
+        $newData = null;
+        $response = $this->find($id);
+
+        if (!empty($data['move']) && $data['move'] == 'next') {
+            $nextBoardCategory = BoardCategory::where('board_id', '=', $data['board_id'])
+                ->where('id', '>', $data['board_category_id'])
+                    ->orderBy('position', 'asc')->select('id','name')
+                        ->first();
+
+            if (!empty($nextBoardCategory->id)) {
+                $newData['board_category_id'] = $nextBoardCategory->id;
+            }
+        }
+
+        if (!empty($data['move']) && $data['move'] === 'previous') {
+            $previousBoardCategory = BoardCategory::where('board_id', $data['board_id'])
+                ->where('id', '<', $data['board_category_id'])
+                    ->orderBy('position', 'desc')
+                        ->select('id', 'name')
+                            ->first();
+
+            if ($previousBoardCategory) {
+                $newData['board_category_id'] = $previousBoardCategory->id;
+            }
+        }
+
+        if (!empty($newData)) {
+            \Log::info($newData);
+            $response->update($newData);
+        }
 
         return $response;
     }

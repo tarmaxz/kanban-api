@@ -47,6 +47,9 @@
         </div>
       </div>
     </div>
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <a href={{ route('kanban.index') }} class="btn btn-success">Voltar para o Kanban</a>
+    </div>
   </div>
 
   <div
@@ -73,4 +76,7 @@
     </div>
   </div>
 
+    @section('scripts')
+        <script src="{{ asset('assets/js/form-board.js') }}"></script>
+    @endsection
   @endsection

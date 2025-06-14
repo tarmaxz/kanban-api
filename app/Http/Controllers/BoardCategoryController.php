@@ -25,10 +25,10 @@ class BoardCategoryController extends Controller {
 
     public function listView()
 	{
-        $list = $this->boardCategoryRepository->all(request()->all());
+        //$list = $this->boardCategoryRepository->all(request()->all());
 		$viewVars = [
 			'baseSite' => url('/'),
-            'list' => $list
+            'list' => []
 		];
 
 		return view('pages.admin.board-category.list', $viewVars);
@@ -37,14 +37,14 @@ class BoardCategoryController extends Controller {
     public function formView($id = null)
 	{
         $details = null;
-        $list = $this->boardRepository->all(request()->all());
-        if (!empty($id)) {
+        //$list = $this->boardRepository->all(request()->all());
+        /*if (!empty($id)) {
             $details = $this->boardCategoryRepository->find($id);
-        }
+        }*/
 
 		$viewVars = [
 			'baseSite' => url('/'),
-            'list' => $list,
+            'list' => [],
             'details' => $details
 		];
 

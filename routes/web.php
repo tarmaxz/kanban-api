@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\BoardCategoryController;
 
-Route::get('/kanban', [BoardController::class, 'indexView']);
+
+Route::get('/', [IndexController::class, 'indexView']);
+Route::get('/kanban', [BoardController::class, 'indexView'])->name('kanban.index');
 
 Route::prefix('/admin')->group(function() {
     Route::prefix('/boards')->group(function() {

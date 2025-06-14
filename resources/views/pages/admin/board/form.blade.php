@@ -24,7 +24,7 @@
                 <button type="submit" class="btn btn-primary">{{ $details?->id ? 'Editar' : 'Cadastrar' }}</button>
               </div>
               <div class="mt-3">
-                <a href="{{ route('admin.board-categories.index') }}" class="btn btn-secondary">← Voltar</a>
+                <a href="{{ route('admin.boards.index') }}" class="btn btn-secondary">← Voltar</a>
               </div>
             </form>
             <div id="mensagem" class="mt-3"></div>
@@ -33,5 +33,7 @@
       </div>
     </div>
   </div>
-
+@section('scripts')
+  <script src="{{ asset('assets/js/form-board.js') }}"></script>
+@endsection
   @endsection
