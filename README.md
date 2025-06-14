@@ -47,14 +47,21 @@ Isso vai:
 - Mapear as portas 8080 (host) para 8000 (container Laravel)
 - Mapear a porta 15432 (host) para 5432 (container PostgreSQL)
 
-### 4. Executar as migrations e seeders (opcional)
+### 4. Executar as migrations, seeders e configurar Laravel Passport
 
 Em outro terminal, com os containers rodando, execute:
 
 ```bash
 docker exec -it kanban-api bash
 php artisan migrate --seed
+php artisan passport:install
+php artisan passport:client --password
 ```
+
+Isso irá:
+- Configurar o banco de dados com as tabelas e dados iniciais
+- Instalar o Laravel Passport para autenticação da API
+- Criar um client para autenticação via password grant (siga as instruções no terminal)
 
 ### 5. Acessar a aplicação
 
@@ -77,5 +84,3 @@ http://localhost:8080
   ```
 
 ---
-
-Qualquer dúvida, só chamar!
